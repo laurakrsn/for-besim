@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>For You ❤️</title>
-
   <style>
     :root{
       --bg1:#0b0b10;
@@ -18,12 +17,10 @@
       --shadow: 0 20px 60px rgba(0,0,0,.55);
       --radius: 18px;
     }
-
     *{box-sizing:border-box}
-
     body{
       margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
       background:
         radial-gradient(1200px 600px at 20% 10%, rgba(255,77,136,.12), transparent 60%),
@@ -31,12 +28,14 @@
         linear-gradient(160deg, var(--bg1), var(--bg2));
       min-height:100vh;
       display:flex;
-      justify-content:center;
       align-items:center;
+      justify-content:center;
       padding:24px;
     }
-
-    .shell{width:min(980px,100%)}
+    a{color:inherit}
+    .shell{
+      width:min(980px, 100%);
+    }
     .card{
       background:var(--card);
       border:1px solid var(--border);
@@ -44,222 +43,517 @@
       box-shadow:var(--shadow);
       overflow:hidden;
     }
-
     header{
       padding:18px 20px;
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:space-between;
       border-bottom:1px solid var(--border);
+      backdrop-filter: blur(10px);
     }
-
+    header .title{
+      display:flex; gap:10px; align-items:center;
+      font-weight:650;
+      letter-spacing:.2px;
+    }
     .pill{
       font-size:12px;
       padding:6px 10px;
-      border-radius:999px;
       border:1px solid var(--border);
+      border-radius:999px;
       color:var(--muted);
     }
 
     .view{
       padding:22px;
     }
-
     .center{
       display:grid;
       place-items:center;
       min-height:520px;
       text-align:center;
     }
-
+    .hint{color:var(--muted); max-width:560px; line-height:1.55}
     .btn{
       cursor:pointer;
       border:none;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      background:linear-gradient(135deg, var(--accent), var(--accent2));
       color:white;
       padding:12px 16px;
       border-radius:14px;
-      font-weight:600;
+      font-weight:650;
+      box-shadow: 0 12px 30px rgba(255,77,136,.18);
+      transition: transform .12s ease;
     }
-
+    .btn:active{transform: translateY(1px) scale(.99)}
     .btn.secondary{
       background:transparent;
       border:1px solid var(--border);
       color:var(--text);
+      box-shadow:none;
     }
 
     /* Envelope */
+    .envelopeWrap{
+      display:grid;
+      gap:18px;
+      justify-items:center;
+    }
     .envelope{
-      width:280px;height:190px;
+      width:280px; height:190px;
       position:relative;
       cursor:pointer;
+      filter: drop-shadow(0 16px 40px rgba(0,0,0,.55));
+      transform: translateZ(0);
     }
-
     .env-body{
-      position:absolute;inset:0;
-      border-radius:16px;
+      position:absolute; inset:0;
+      background: linear-gradient(145deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
       border:1px solid var(--border);
-      background:rgba(255,255,255,.06);
+      border-radius:16px;
+      overflow:hidden;
     }
-
+    .env-body:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        linear-gradient( to bottom right, rgba(255,77,136,.18), transparent 55%),
+        linear-gradient( to top left, rgba(124,92,255,.14), transparent 50%);
+      opacity:.9;
+    }
     .env-flap{
-      position:absolute;left:0;right:0;top:0;height:55%;
-      transform-origin:top;
-      transition:.8s;
+      position:absolute;
+      left:0; right:0;
+      top:0;
+      height:55%;
+      transform-origin: top center;
+      transform: rotateX(0deg);
+      transition: transform .9s cubic-bezier(.2,.8,.15,1);
+      perspective:900px;
     }
-
     .env-flap:before{
       content:"";
-      position:absolute;inset:0;
-      border-radius:16px 16px 0 0;
+      position:absolute; inset:0;
+      background: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
       border:1px solid var(--border);
       border-bottom:none;
-      clip-path:polygon(0 0,100% 0,50% 100%);
-      background:rgba(255,255,255,.08);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
     }
-
-    .opened .env-flap{transform:rotateX(180deg)}
-
     .seal{
-      position:absolute;left:50%;top:58%;
-      transform:translate(-50%,-50%);
-      width:52px;height:52px;
-      border-radius:50%;
+      position:absolute;
+      left:50%; top:58%;
+      transform: translate(-50%,-50%);
+      width:54px; height:54px;
+      border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(255,255,255,.08));
       border:1px solid var(--border);
-      display:grid;place-items:center;
+      display:grid; place-items:center;
+      font-size:20px;
+      transition: transform .25s ease;
     }
+    .envelope:hover .seal{transform: translate(-50%,-50%) scale(1.03)}
+    .opened .env-flap{transform: rotateX(180deg)}
+    .letter{
+      position:absolute;
+      left:10%; right:10%;
+      bottom:12%;
+      height:70%;
+      background: rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      border-radius:12px;
+      transform: translateY(26px);
+      transition: transform .9s cubic-bezier(.2,.8,.15,1);
+    }
+    .opened .letter{transform: translateY(-24px)}
+    .letterLines{
+      position:absolute; inset:18px;
+      display:grid; gap:10px;
+      opacity:.7;
+    }
+    .line{
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+    }
+    .line.short{width:62%}
+    .line.tiny{width:38%}
 
-    /* App */
-    .app{display:none}
+    /* Modal */
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .modalBack.show{display:flex}
+    .modal{
+      width:min(520px, 100%);
+      background: rgba(18,18,30,.92);
+      border:1px solid var(--border);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .modal h2{margin:4px 0 6px; font-size:18px}
+    .modal p{margin:0 0 12px; color:var(--muted); line-height:1.5}
+    .row{display:flex; gap:10px; align-items:center}
+    input{
+      flex:1;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:12px 12px;
+      border-radius:14px;
+      outline:none;
+      font-size:14px;
+    }
+    .error{
+      color:#ff7aa6;
+      font-size:13px;
+      margin-top:10px;
+      display:none;
+    }
+    .error.show{display:block}
+
+    /* App content */
+    .app{
+      display:none;
+    }
     .app.show{display:block}
 
     .nav{
       display:flex;
       gap:8px;
+      flex-wrap:wrap;
       padding:12px 16px;
       border-bottom:1px solid var(--border);
+      background: rgba(0,0,0,.08);
     }
-
     .tab{
+      cursor:pointer;
       padding:10px 12px;
       border-radius:14px;
       border:1px solid var(--border);
-      cursor:pointer;
-      font-size:13px;
       color:var(--muted);
+      background: rgba(255,255,255,.03);
+      font-size:13px;
+      user-select:none;
     }
-
     .tab.active{
       color:var(--text);
-      background:rgba(255,255,255,.06);
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.18);
     }
 
-    .page{display:none;padding:18px}
+    .page{
+      padding:18px;
+      display:none;
+    }
     .page.show{display:block}
 
     .hero{
+      display:grid;
+      gap:10px;
       padding:16px;
-      border-radius:18px;
       border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      margin-bottom:14px;
+      border-radius:18px;
+      background: rgba(255,255,255,.04);
+    }
+    .hero h1{margin:0; font-size:24px}
+    .hero .sub{color:var(--muted); line-height:1.6}
+
+    .grid2{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+    }
+    @media (max-width:860px){
+      .grid2{grid-template-columns:1fr}
+    }
+
+    .panel{
+      padding:16px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background: rgba(255,255,255,.03);
+    }
+    .panel h3{margin:0 0 10px; font-size:16px}
+    .panel p{margin:0; color:var(--muted); line-height:1.7}
+
+    .quote{
+      font-style:italic;
+      color:rgba(255,255,255,.78);
+      line-height:1.8;
     }
 
     .gallery{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap:10px;
+      margin-top:10px;
     }
-
+    @media (max-width:860px){
+      .gallery{grid-template-columns: repeat(2, 1fr);}
+    }
     .img{
       width:100%;
-      aspect-ratio:1/1;
-      object-fit:cover;
+      aspect-ratio: 1 / 1;
       border-radius:16px;
       border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      object-fit:cover;
       cursor:pointer;
+      transition: transform .12s ease;
     }
-
+    .img:active{transform: scale(.99)}
     .lightbox{
-      position:fixed;inset:0;
-      background:rgba(0,0,0,.8);
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.75);
       display:none;
-      justify-content:center;
-      align-items:center;
+      align-items:center; justify-content:center;
+      padding:20px;
     }
-
     .lightbox.show{display:flex}
     .lightbox img{
-      max-width:90%;
-      max-height:85vh;
+      max-width:min(980px, 100%);
+      max-height: 85vh;
       border-radius:18px;
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .timeline{
+      display:grid;
+      gap:12px;
+      margin-top:10px;
+    }
+    .moment{
+      display:grid;
+      gap:6px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+    .moment .when{
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.2px;
+    }
+    .moment .what{
+      line-height:1.65;
+      color:rgba(255,255,255,.80);
+    }
+
+    footer{
+      padding:14px 16px;
+      border-top:1px solid var(--border);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
     }
   </style>
 </head>
-
 <body>
-<div class="shell card">
+  <div class="shell card">
+    <header>
+      <div class="title">
+        <span>💌</span>
+        <span>For You</span>
+      </div>
+      <div class="pill" id="statusPill">Locked</div>
+    </header>
 
-<header>
-  <div>💌 For Besim</div>
-  <div class="pill" id="statusPill">Locked</div>
-</header>
+    <!-- LOCK SCREEN -->
+    <div class="view center" id="lockView">
+      <div class="envelopeWrap">
+        <div class="envelope" id="envelope" aria-label="Open letter">
+          <div class="env-body"></div>
+          <div class="env-flap"></div>
+          <div class="letter">
+            <div class="letterLines">
+              <div class="line"></div>
+              <div class="line short"></div>
+              <div class="line"></div>
+              <div class="line tiny"></div>
+            </div>
+          </div>
+          <div class="seal">❤</div>
+        </div>
 
-<!-- LOCK -->
-<div class="view center" id="lockView">
-  <div class="envelope" id="envelope">
-    <div class="env-body"></div>
-    <div class="env-flap"></div>
-    <div class="seal">❤</div>
-  </div>
-  <button class="btn secondary" id="openBtn">Open</button>
-</div>
+        <div>
+          <div style="font-weight:700; font-size:18px; margin-bottom:8px;">
+            A little letter you have to unlock.
+          </div>
+          <div class="hint">
+            Click the envelope. Enter the password you always use.  
+            (Yes, I’m being dramatic on purpose.)
+          </div>
+          <div style="margin-top:14px;">
+            <button class="btn secondary" id="openBtn">Open</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- APP -->
-<div class="app" id="app">
+    <!-- APP -->
+    <div class="app" id="app">
+      <div class="nav" id="tabs"></div>
 
-  <div class="nav" id="tabs"></div>
+      <div class="page" id="page-0">
+        <div class="hero">
+          <h1>Te dua, zemra jeme 🖤</h1>
+          <div class="sub">
+            This is my little “film scene” for you.  
+            No big speech, just proof that you’re loved in very specific ways.
+          </div>
+        </div>
 
-  <div class="page" id="page-0">
-    <div class="hero">
-      <h1>Te dua, zemra jeme 🖤</h1>
-      <p>This is my quiet way of loving you.</p>
+        <div class="grid2">
+          <div class="panel">
+            <h3>What I love about you</h3>
+            <p id="loveList"></p>
+          </div>
+          <div class="panel">
+            <h3>Tonight’s quote</h3>
+            <div class="quote" id="quoteBox"></div>
+            <div style="margin-top:12px;">
+              <button class="btn secondary" id="newQuote">Another one</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-1">
+        <div class="hero">
+          <h1>Words, without trying too hard.</h1>
+          <div class="sub">Click “Next” inside each card if you want. (Or don’t. Mysterious king.)</div>
+        </div>
+        <div class="timeline" id="letters"></div>
+      </div>
+
+      <div class="page" id="page-2">
+        <div class="hero">
+          <h1>Us. Documented. 😌</h1>
+          <div class="sub">Tap an image to zoom.</div>
+        </div>
+        <div class="gallery" id="gallery"></div>
+      </div>
+
+      <div class="page" id="page-3">
+        <div class="hero">
+          <h1>One last thing</h1>
+          <div class="sub">If you ever forget, come back here.</div>
+        </div>
+        <div class="panel">
+          <h3>My promise</h3>
+          <p id="promiseText"></p>
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="confetti">Press for dramatic effect</button>
+            <button class="btn secondary" id="relock">Lock it again</button>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <span>Made with love + mild chaos.</span>
+        <span id="footerNote">💬 Replace texts + add your photos in /assets</span>
+      </footer>
     </div>
   </div>
 
-  <div class="page" id="page-1">
-    <div class="hero">
-      <h1>Letters</h1>
-      <p>Things I don’t always say out loud.</p>
+  <!-- PASSWORD MODAL -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h2>Enter the password</h2>
+      <p>Hint: the one you always use. (Yes. That one.)</p>
+      <div class="row">
+        <input id="pw" type="password" placeholder="Password…" autocomplete="off" />
+        <button class="btn" id="unlock">Unlock</button>
+      </div>
+      <div class="error" id="err">Nope. Try again 😭</div>
+      <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+        <button class="btn secondary" id="closeModal">Close</button>
+      </div>
     </div>
   </div>
 
-  <div class="page" id="page-2">
-    <div class="hero">
-      <h1>Us. Documented. 😌</h1>
-      <p>Tap an image to zoom.</p>
-    </div>
-    <div class="gallery" id="gallery"></div>
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <img id="lightboxImg" alt="Photo" />
   </div>
 
-</div>
-</div>
+  <script>
+    /***********************
+     *  EDIT THIS SECTION  *
+     ***********************/
+    const PASSWORD = "131104"; // <-- change to your birthday password format
 
-<div class="lightbox" id="lightbox">
-  <img id="lightboxImg">
-</div>
+    const TAB_NAMES = [
+      "Home",
+      "Letters",
+      "Photos",
+      "Final"
+    ];
 
-<script>
-const PASSWORD = "13112004";
+    // Home page “What I love…” list:
+    const LOVE_LINES = [
+      "The way you feel like home, without even trying.",
+      "Your loyalty. It’s rare. It’s loud. It’s you.",
+      "How you act tough but you’re secretly soft with me.",
+      "Your mind. The way you notice details other people miss.",
+      "How you make ordinary days feel like a scene."
+    ];
 
-const TAB_NAMES = ["Home","Letters","Photos"];
+    // Random quotes (film-ish + sweet + a bit funny)
+    const QUOTES = [
+      "If this were a movie, you’d be the part I rewatch.",
+      "I’m not saying you’re perfect… but my standards mysteriously rose after you.",
+      "Some people are a chapter. You’re the whole plot twist.",
+      "You and I? Very ‘end credits song’ energy.",
+      "I’d choose you in every timeline. Even the messy ones.",
+      "You’re my favorite habit."
+    ];
 
-const PHOTOS = [
+    // Letters page cards:
+    const LETTER_CARDS = [
+      {
+        when: "Scene 1",
+        text: "I’m proud of you. Not for what you achieve—just for who you are when nobody’s watching."
+      },
+      {
+        when: "Scene 2",
+        text: "Thank you for being patient with me, even when I’m dramatic. (I know. I’m working on it.)"
+      },
+      {
+        when: "Scene 3",
+        text: "I love the way we laugh. It’s like our private language."
+      },
+      {
+        when: "Scene 4",
+        text: "I want to build a life that feels calm, safe, and a little bit iconic—with you."
+      }
+    ];
+
+    // Final promise text:
+    const PROMISE =
+      "I’m with you. In the loud days and the quiet ones. " +
+      "I’ll keep choosing softness, honesty, and us. " +
+      "Happy birthday—my heart is on your side. 🖤";
+
+    // Photos: put your image filenames here (upload them into /assets/)
+    const PHOTOS = [
   "assets/IMG_1679.jpeg",
   "assets/IMG_2614.jpeg",
   "assets/IMG_4799.jpeg",
   "assets/IMG_5314.jpg",
-  "assets/IMG_5871.jpeg",
+  "assets/IMG_5871.jpg",
   "assets/IMG_5932.jpeg",
   "assets/IMG_5939.jpeg",
   "assets/IMG_5942.jpeg",
@@ -270,53 +564,174 @@ const PHOTOS = [
   "assets/IMG_9422.jpeg"
 ];
 
-const lockView = document.getElementById("lockView");
-const app = document.getElementById("app");
-const envelope = document.getElementById("envelope");
-const openBtn = document.getElementById("openBtn");
-const statusPill = document.getElementById("statusPill");
-const tabs = document.getElementById("tabs");
-const pages = document.querySelectorAll(".page");
-const gallery = document.getElementById("gallery");
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightboxImg");
+    /***********************
+     *  DO NOT TOUCH MUCH  *
+     ***********************/
+    const lockView = document.getElementById("lockView");
+    const app = document.getElementById("app");
+    const statusPill = document.getElementById("statusPill");
 
-openBtn.onclick = envelope.onclick = () => {
-  const pw = prompt("Password:");
-  if(pw === PASSWORD){
-    lockView.style.display="none";
-    app.classList.add("show");
-    statusPill.textContent="Unlocked";
-    setTab(0);
-  }
-};
+    const envelope = document.getElementById("envelope");
+    const openBtn = document.getElementById("openBtn");
+    const modalBack = document.getElementById("modalBack");
+    const closeModal = document.getElementById("closeModal");
+    const unlockBtn = document.getElementById("unlock");
+    const pwInput = document.getElementById("pw");
+    const err = document.getElementById("err");
 
-TAB_NAMES.forEach((t,i)=>{
-  const el=document.createElement("div");
-  el.className="tab";
-  el.textContent=t;
-  el.onclick=()=>setTab(i);
-  tabs.appendChild(el);
-});
+    const tabs = document.getElementById("tabs");
+    const pages = [...document.querySelectorAll(".page")];
 
-function setTab(i){
-  [...tabs.children].forEach((t,j)=>t.classList.toggle("active",i===j));
-  pages.forEach((p,j)=>p.classList.toggle("show",i===j));
-}
+    const loveList = document.getElementById("loveList");
+    const quoteBox = document.getElementById("quoteBox");
+    const newQuote = document.getElementById("newQuote");
 
-PHOTOS.forEach(src=>{
-  const img=document.createElement("img");
-  img.src=src;
-  img.className="img";
-  img.onclick=()=>{
-    lightboxImg.src=src;
-    lightbox.classList.add("show");
-  };
-  gallery.appendChild(img);
-});
+    const letters = document.getElementById("letters");
+    const gallery = document.getElementById("gallery");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImg");
 
-lightbox.onclick=()=>lightbox.classList.remove("show");
-</script>
+    const promiseText = document.getElementById("promiseText");
+    const relock = document.getElementById("relock");
+    const confettiBtn = document.getElementById("confetti");
 
+    function showModal(){
+      modalBack.classList.add("show");
+      err.classList.remove("show");
+      pwInput.value = "";
+      setTimeout(()=>pwInput.focus(), 50);
+    }
+    function hideModal(){
+      modalBack.classList.remove("show");
+      err.classList.remove("show");
+    }
+
+    envelope.addEventListener("click", () => {
+      envelope.classList.add("opened");
+      showModal();
+    });
+    openBtn.addEventListener("click", () => {
+      envelope.classList.add("opened");
+      showModal();
+    });
+    closeModal.addEventListener("click", hideModal);
+    modalBack.addEventListener("click", (e) => {
+      if(e.target === modalBack) hideModal();
+    });
+
+    function unlock(){
+      const val = pwInput.value.trim();
+      if(val === PASSWORD){
+        hideModal();
+        statusPill.textContent = "Unlocked";
+        lockView.style.display = "none";
+        app.classList.add("show");
+        setActiveTab(0);
+      }else{
+        err.classList.add("show");
+        pwInput.select();
+      }
+    }
+    unlockBtn.addEventListener("click", unlock);
+    pwInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") unlock();
+      if(e.key === "Escape") hideModal();
+    });
+
+    // Build tabs
+    TAB_NAMES.forEach((name, i) => {
+      const el = document.createElement("div");
+      el.className = "tab";
+      el.textContent = name;
+      el.addEventListener("click", ()=>setActiveTab(i));
+      tabs.appendChild(el);
+    });
+
+    function setActiveTab(i){
+      [...tabs.children].forEach((t, idx) => t.classList.toggle("active", idx===i));
+      pages.forEach((p, idx) => p.classList.toggle("show", idx===i));
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    // Home content
+    loveList.innerHTML = LOVE_LINES.map(x => "• " + x).join("<br>");
+    function pickQuote(){
+      const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+      quoteBox.textContent = "“" + q + "”";
+    }
+    newQuote.addEventListener("click", pickQuote);
+    pickQuote();
+
+    // Letters page
+    LETTER_CARDS.forEach((c) => {
+      const box = document.createElement("div");
+      box.className = "moment";
+      box.innerHTML = `
+        <div class="when">${c.when}</div>
+        <div class="what">${c.text}</div>
+      `;
+      letters.appendChild(box);
+    });
+
+    // Photos gallery
+    PHOTOS.forEach((src) => {
+      const img = document.createElement("img");
+      img.className = "img";
+      img.src = src;
+      img.alt = "Photo";
+      img.addEventListener("click", () => {
+        lightboxImg.src = src;
+        lightbox.classList.add("show");
+      });
+      gallery.appendChild(img);
+    });
+    lightbox.addEventListener("click", () => lightbox.classList.remove("show"));
+
+    // Final
+    promiseText.textContent = PROMISE;
+
+    relock.addEventListener("click", () => {
+      app.classList.remove("show");
+      lockView.style.display = "grid";
+      statusPill.textContent = "Locked";
+      envelope.classList.remove("opened");
+    });
+
+    // Tiny “confetti” (safe, simple)
+    confettiBtn.addEventListener("click", () => {
+      const n = 120;
+      for(let i=0;i<n;i++){
+        const s = document.createElement("span");
+        s.style.position="fixed";
+        s.style.left = (Math.random()*100) + "vw";
+        s.style.top = "-10px";
+        s.style.width="6px";
+        s.style.height="10px";
+        s.style.borderRadius="2px";
+        s.style.background = "rgba(255,255,255,.9)";
+        s.style.opacity = (0.4 + Math.random()*0.6).toString();
+        s.style.transform = `rotate(${Math.random()*180}deg)`;
+        s.style.zIndex="9999";
+        document.body.appendChild(s);
+
+        const dur = 900 + Math.random()*1200;
+        const drift = (Math.random()*2-1) * 140;
+        const endY = window.innerHeight + 60;
+
+        const startX = parseFloat(s.style.left);
+        const xPx = (startX/100) * window.innerWidth;
+
+        const start = performance.now();
+        function tick(t){
+          const p = Math.min(1, (t-start)/dur);
+          s.style.top = (-10 + p*endY) + "px";
+          s.style.left = (xPx + drift*p) + "px";
+          if(p<1) requestAnimationFrame(tick);
+          else s.remove();
+        }
+        requestAnimationFrame(tick);
+      }
+    });
+  </script>
 </body>
 </html>
