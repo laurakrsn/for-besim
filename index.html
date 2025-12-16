@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For You ❤️</title>
+
+  <style>
+    :root{
+      --bg1:#0b0b10;
+      --bg2:#121222;
+      --card:#151528cc;
+      --border:rgba(255,255,255,.12);
+      --text:rgba(255,255,255,.88);
+      --muted:rgba(255,255,255,.62);
+      --accent:#ff4d88;
+      --accent2:#7c5cff;
+      --shadow: 0 20px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(255,77,136,.12), transparent 60%),
+        radial-gradient(1000px 700px at 85% 30%, rgba(124,92,255,.10), transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:24px;
+    }
+
+    .shell{width:min(980px,100%)}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    header{
+      padding:18px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid var(--border);
+    }
+
+    .pill{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+    }
+
+    .view{
+      padding:22px;
+    }
+
+    .center{
+      display:grid;
+      place-items:center;
+      min-height:520px;
+      text-align:center;
+    }
+
+    .btn{
+      cursor:pointer;
+      border:none;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:white;
+      padding:12px 16px;
+      border-radius:14px;
+      font-weight:600;
+    }
+
+    .btn.secondary{
+      background:transparent;
+      border:1px solid var(--border);
+      color:var(--text);
+    }
+
+    /* Envelope */
+    .envelope{
+      width:280px;height:190px;
+      position:relative;
+      cursor:pointer;
+    }
+
+    .env-body{
+      position:absolute;inset:0;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+    }
+
+    .env-flap{
+      position:absolute;left:0;right:0;top:0;height:55%;
+      transform-origin:top;
+      transition:.8s;
+    }
+
+    .env-flap:before{
+      content:"";
+      position:absolute;inset:0;
+      border-radius:16px 16px 0 0;
+      border:1px solid var(--border);
+      border-bottom:none;
+      clip-path:polygon(0 0,100% 0,50% 100%);
+      background:rgba(255,255,255,.08);
+    }
+
+    .opened .env-flap{transform:rotateX(180deg)}
+
+    .seal{
+      position:absolute;left:50%;top:58%;
+      transform:translate(-50%,-50%);
+      width:52px;height:52px;
+      border-radius:50%;
+      border:1px solid var(--border);
+      display:grid;place-items:center;
+    }
+
+    /* App */
+    .app{display:none}
+    .app.show{display:block}
+
+    .nav{
+      display:flex;
+      gap:8px;
+      padding:12px 16px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .tab{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      cursor:pointer;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .tab.active{
+      color:var(--text);
+      background:rgba(255,255,255,.06);
+    }
+
+    .page{display:none;padding:18px}
+    .page.show{display:block}
+
+    .hero{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      margin-bottom:14px;
+    }
+
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+
+    .img{
+      width:100%;
+      aspect-ratio:1/1;
+      object-fit:cover;
+      border-radius:16px;
+      border:1px solid var(--border);
+      cursor:pointer;
+    }
+
+    .lightbox{
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.8);
+      display:none;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .lightbox.show{display:flex}
+    .lightbox img{
+      max-width:90%;
+      max-height:85vh;
+      border-radius:18px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="shell card">
+
+<header>
+  <div>💌 For Besim</div>
+  <div class="pill" id="statusPill">Locked</div>
+</header>
+
+<!-- LOCK -->
+<div class="view center" id="lockView">
+  <div class="envelope" id="envelope">
+    <div class="env-body"></div>
+    <div class="env-flap"></div>
+    <div class="seal">❤</div>
+  </div>
+  <button class="btn secondary" id="openBtn">Open</button>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+
+  <div class="nav" id="tabs"></div>
+
+  <div class="page" id="page-0">
+    <div class="hero">
+      <h1>Te dua, zemra jeme 🖤</h1>
+      <p>This is my quiet way of loving you.</p>
+    </div>
+  </div>
+
+  <div class="page" id="page-1">
+    <div class="hero">
+      <h1>Letters</h1>
+      <p>Things I don’t always say out loud.</p>
+    </div>
+  </div>
+
+  <div class="page" id="page-2">
+    <div class="hero">
+      <h1>Us. Documented. 😌</h1>
+      <p>Tap an image to zoom.</p>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </div>
+
+</div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg">
+</div>
+
+<script>
+const PASSWORD = "13112004";
+
+const TAB_NAMES = ["Home","Letters","Photos"];
+
+const PHOTOS = [
+  "assets/IMG_1679.jpeg",
+  "assets/IMG_2614.jpeg",
+  "assets/IMG_4799.jpeg",
+  "assets/IMG_5314.jpg",
+  "assets/IMG_5871.jpeg",
+  "assets/IMG_5932.jpeg",
+  "assets/IMG_5939.jpeg",
+  "assets/IMG_5942.jpeg",
+  "assets/IMG_7467.jpeg",
+  "assets/IMG_7935.jpeg",
+  "assets/IMG_7938.jpeg",
+  "assets/IMG_9421.jpeg",
+  "assets/IMG_9422.jpeg"
+];
+
+const lockView = document.getElementById("lockView");
+const app = document.getElementById("app");
+const envelope = document.getElementById("envelope");
+const openBtn = document.getElementById("openBtn");
+const statusPill = document.getElementById("statusPill");
+const tabs = document.getElementById("tabs");
+const pages = document.querySelectorAll(".page");
+const gallery = document.getElementById("gallery");
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+
+openBtn.onclick = envelope.onclick = () => {
+  const pw = prompt("Password:");
+  if(pw === PASSWORD){
+    lockView.style.display="none";
+    app.classList.add("show");
+    statusPill.textContent="Unlocked";
+    setTab(0);
+  }
+};
+
+TAB_NAMES.forEach((t,i)=>{
+  const el=document.createElement("div");
+  el.className="tab";
+  el.textContent=t;
+  el.onclick=()=>setTab(i);
+  tabs.appendChild(el);
+});
+
+function setTab(i){
+  [...tabs.children].forEach((t,j)=>t.classList.toggle("active",i===j));
+  pages.forEach((p,j)=>p.classList.toggle("show",i===j));
+}
+
+PHOTOS.forEach(src=>{
+  const img=document.createElement("img");
+  img.src=src;
+  img.className="img";
+  img.onclick=()=>{
+    lightboxImg.src=src;
+    lightbox.classList.add("show");
+  };
+  gallery.appendChild(img);
+});
+
+lightbox.onclick=()=>lightbox.classList.remove("show");
+</script>
+
+</body>
+</html>
